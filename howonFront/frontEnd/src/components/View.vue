@@ -1,0 +1,9 @@
+<template>
+  <v-app>
+    <v-app-bar>
+      <v-app-bar-title>글보기</v-app-bar-title>
+    </v-app-bar>
+  </v-app>
+</template>
+<script></script>
+<style></style>
