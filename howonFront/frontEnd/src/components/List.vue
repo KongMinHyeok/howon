@@ -50,16 +50,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(article, index) in state.data.articles">
+              <tr v-for="(article, index) in state.data.articles" :key="article.no">
                 <td class="text-center">{{ state.pageStartNum - index }}</td>
-                <td class="text-left">{{ article.title }}</td>
+                <td class="text-left"  @click="btnView">{{ article.title }}</td>
                 <td class="text-center">{{ article.uid }}</td>
                 <td class="text-center">{{ article.rdate }}</td>
               </tr>
             </tbody>
           </v-table>
           <v-pagination
-            :length="lastPageNum"
+            :length="state.lastPageNum"
             :total-visible="5"
             rounded="0"
             v-model="page"
@@ -106,6 +106,11 @@ const btnWrite = () => {
 
 const pageHandler = () => {
   getArticles(page.value);
+};
+
+const btnView = (no) => {
+  localStorage.setItem("no", no);
+  router.push("/view");
 };
 
 const getArticles = (pg) => {
