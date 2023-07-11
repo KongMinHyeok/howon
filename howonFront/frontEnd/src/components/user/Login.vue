@@ -60,7 +60,7 @@ const user = reactive({
 
 const btnLogin = () => {
   axios
-    .post("http://localhost:8080/howon/user/login", user)
+    .post("http://localhost:8080/Voard/user/login", user)
     .then((response) => {
       console.log(response);
 

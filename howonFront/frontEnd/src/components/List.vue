@@ -1,137 +1,79 @@
 <template>
   <v-app>
-    <v-app-bar>
+    <v-app-bar :elevation="1">
       <v-app-bar-title></v-app-bar-title>
       <p>
-        {{ user?.nick }}님 반갑습니다.
+        {{ user?.uid }}님 반갑습니다.
         <v-btn @click="btnLogout">로그아웃</v-btn>
       </p>
     </v-app-bar>
     <v-main>
-      <v-row rows="2">
-        <v-col>
-          <v-card>
+      <v-row>
+        <v-col cols="3">
+          <v-sheet class="vcardtitle">
             <v-card-text align="center">공지사항</v-card-text>
-          </v-card>
-        </v-col>
-        <v-col>
-          <v-card> </v-card>
-        </v-col>
-        <v-col>
-          <v-card> </v-card>
-        </v-col>
-        <v-col>
-          <v-card> </v-card>
-        </v-col>
-        <v-col>
-          <v-card> </v-card>
+          </v-sheet>
         </v-col>
       </v-row>
     </v-main>
-    <v-sheet width="300">
-      <v-card-text>
-        <v-text-field
-          :loading="loading"
-          density="compact"
-          variant="solo"
-          label="검색어를 입력하세요"
-          append-inner-icon="mdi-magnify"
-          single-line
-          hide-details
-          @click:append-inner="onClick"
-        ></v-text-field>
-      </v-card-text>
-    </v-sheet>
-    <v-container>
-      <v-sheet max-width="100%" class="">
-        <v-table max-width="100%">
-          <thead>
-            <tr>
-              <th class="text-center">번호</th>
-              <th width="1200" class="text-center">제목</th>
-              <th class="text-center">작성자</th>
-              <th class="text-center">등록일</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-left">설교경강집</td>
-              <td class="text-center">강원규</td>
-              <td class="text-center">2021-08-19</td>
-            </tr>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-left">설교경강집</td>
-              <td class="text-center">강원규</td>
-              <td class="text-center">2021-08-19</td>
-            </tr>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-left">설교경강집</td>
-              <td class="text-center">강원규</td>
-              <td class="text-center">2021-08-19</td>
-            </tr>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-left">설교경강집</td>
-              <td class="text-center">강원규</td>
-              <td class="text-center">2021-08-19</td>
-            </tr>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-left">설교경강집</td>
-              <td class="text-center">강원규</td>
-              <td class="text-center">2021-08-19</td>
-            </tr>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-left">설교경강집</td>
-              <td class="text-center">강원규</td>
-              <td class="text-center">2021-08-19</td>
-            </tr>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-left">설교경강집</td>
-              <td class="text-center">강원규</td>
-              <td class="text-center">2021-08-19</td>
-            </tr>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-left">설교경강집</td>
-              <td class="text-center">강원규</td>
-              <td class="text-center">2021-08-19</td>
-            </tr>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-left">설교경강집</td>
-              <td class="text-center">강원규</td>
-              <td class="text-center">2021-08-19</td>
-            </tr>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-left">설교경강집</td>
-              <td class="text-center">강원규</td>
-              <td class="text-center">2021-08-19</td>
-            </tr>
-          </tbody>
-        </v-table>
-        <v-pagination
-          :container-class="'pagination'"
-          :length="lastPageNum"
-          :total-visible="5"
-          rounded="0"
-          v-model="page"
-          @click="pageHandler"
-          @next="pageHandler"
-          @prev="pageHandler"
-        ></v-pagination>
-        <v-sheet class="text-right pt06">
-          <v-btn color="black" @click="btnWrite">글쓰기</v-btn>
-          <v-btn color="black" @click="btnWrite">처음으로</v-btn>
+    <v-row style="flex: 0">
+      <v-col cols="6">
+        <v-sheet> </v-sheet>
+      </v-col>
+      <v-col cols="6">
+        <v-sheet width="70%" class="mx-auto">
+          <v-card>
+            <v-text-field
+              :loading="loading"
+              density="compact"
+              variant="solo"
+              label="검색어를 입력하세요"
+              append-inner-icon="mdi-magnify"
+              single-line
+              hide-details
+              @click:append-inner="onClick"
+            ></v-text-field>
+          </v-card>
         </v-sheet>
-      </v-sheet>
-    </v-container>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-container width="100%">
+        <v-sheet width="100%" class="">
+          <v-table max-width="100%">
+            <thead>
+              <tr>
+                <th class="text-center">번호</th>
+                <th width="1200" class="text-center">제목</th>
+                <th class="text-center">작성자</th>
+                <th class="text-center">등록일</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(article, index) in state.data.articles">
+                <td class="text-center">{{ state.pageStartNum - index }}</td>
+                <td class="text-left">{{ article.title }}</td>
+                <td class="text-center">{{ article.uid }}</td>
+                <td class="text-center">{{ article.rdate }}</td>
+              </tr>
+            </tbody>
+          </v-table>
+          <v-pagination
+            :length="lastPageNum"
+            :total-visible="5"
+            rounded="0"
+            v-model="page"
+            @click="pageHandler"
+            @next="pageHandler"
+            @prev="pageHandler"
+          ></v-pagination>
+          <v-sheet class="text-right pt06">
+            <v-btn color="black" @click="btnWrite">글쓰기</v-btn>
+            <v-btn color="black" @click="btnWrite">처음으로</v-btn>
+          </v-sheet>
+        </v-sheet>
+      </v-container>
+    </v-row>
   </v-app>
 </template>
 
@@ -168,7 +110,7 @@ const pageHandler = () => {
 
 const getArticles = (pg) => {
   axios
-    .get("http://localhost:8080/howon/list?pg=" + pg)
+    .get("http://localhost:8080/Voard/list?pg=" + pg)
     .then((response) => {
       console.log(response);
       const data = response.data;
@@ -186,9 +128,18 @@ onBeforeMount(() => {
 </script>
 <style scoped>
 .v-table {
-  border-top: 2px solid blue;
+  border-top: 3px solid rgb(0, 140, 255);
 }
-.pagination li {
-  border: 1px solid gray;
+
+.v-sheet.vcardtitle {
+  border-top: 3px solid rgb(0, 140, 255);
+}
+.v-card-text {
+  font-weight: bold;
+  font-size: 30px;
+  color: rgb(0, 140, 255);
+}
+.v-main {
+  flex: 0;
 }
 </style>

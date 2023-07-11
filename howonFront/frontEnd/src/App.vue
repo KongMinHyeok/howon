@@ -16,7 +16,7 @@ onBeforeMount(() => {
 
   if (accessToken != null) {
     axios
-      .get("http://127.0.0.1:3306/howon/user/auth", {
+      .get("http://localhost:8080/Voard/user/auth", {
         headers: { "X-AUTH-TOKEN": accessToken },
       })
       .then((response) => {
@@ -29,7 +29,7 @@ onBeforeMount(() => {
         console.log(error);
       });
   } else {
-    router.push("/list");
+    router.push("/user/login");
   }
 });
 </script>

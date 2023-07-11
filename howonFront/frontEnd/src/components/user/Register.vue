@@ -101,7 +101,7 @@ const btnCheckUid = () => {
   loading.value = true;
 
   axios
-    .get("http://localhost:8080/howon/user/countUid", {
+    .get("http://localhost:8080/Voard/user/countUid", {
       params: { uid: user.uid },
     })
     .then((response) => {
@@ -113,7 +113,7 @@ const btnCheckUid = () => {
           rsChip2.value = false;
         } else {
           rsChip1.value = false;
-          rsChip1.value = true;
+          rsChip2.value = true;
         }
       }, 500);
 
@@ -130,13 +130,13 @@ const btnCancel = () => {
 
 const btnRegister = () => {
   axios
-    .post("http://localhost:8080/howon/user/register", user)
+    .post("http://localhost:8080/Voard/user/register", user)
     .then((response) => {
       console.log(response);
       router.push("/user/login");
     })
     .catch((error) => {
-      console.log(errpr);
+      console.log(error);
     });
 };
 </script>
