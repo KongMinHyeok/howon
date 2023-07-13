@@ -10,4 +10,5 @@ registerPlugins(app);
 
 app.use(router);
 app.use(userStore);
+
 app.mount("#app");

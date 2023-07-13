@@ -20,7 +20,7 @@ export const useAppStore = defineStore("app", {
       this.page = no;
     },
     setArticles(pg) {
-      const url = "http://localhost:8184/api/list?pg=" + pg;
+      const url = "http://localhost:8080/Voard/list?pg=" + pg;
       axios
         .get(url)
         .then((res) => {
@@ -31,7 +31,7 @@ export const useAppStore = defineStore("app", {
         });
     },
     setArticle(no) {
-      const url = `http://localhost:8184/api/${no}`;
+      const url = `http://localhost:8080/Voard/view/${no}`;
       axios
         .get(url)
         .then((res) => {

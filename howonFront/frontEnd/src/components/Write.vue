@@ -79,7 +79,6 @@ const userStore = useStore();
 const article = reactive({
   title: null,
   content: null,
-  uid: null,
   file: null,
 });
 

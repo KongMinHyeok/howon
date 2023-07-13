@@ -24,15 +24,16 @@
         <v-sheet width="70%" class="mx-auto">
           <v-card>
             <v-text-field
-              :loading="loading"
+              v-model="state.searchKeyword"
               density="compact"
               variant="solo"
               label="검색어를 입력하세요"
               append-inner-icon="mdi-magnify"
               single-line
               hide-details
-              @click:append-inner="onClick"
+              @input="searchArticles"
             ></v-text-field>
+            <v-btn color="primary" @click="searchArticles">검색</v-btn>
           </v-card>
         </v-sheet>
       </v-col>
@@ -50,11 +51,19 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(article, index) in state.data.articles" :key="article.no">
+              <tr
+                v-for="(article, index) in state.data.articles"
+                :key="article.no"
+              >
                 <td class="text-center">{{ state.pageStartNum - index }}</td>
-                <td class="text-left"  @click="btnView">{{ article.title }}</td>
+                <td class="text-left" @click="btnView(article)">
+                  {{ article.title }}
+                </td>
                 <td class="text-center">{{ article.uid }}</td>
-                <td class="text-center">{{ article.rdate }}</td>
+                <td class="text-center">
+                  {{ article.rdate }}
+                </td>
+                <td class="text-center"></td>
               </tr>
             </tbody>
           </v-table>
@@ -78,11 +87,13 @@
 </template>
 
 <script setup>
+import { useAppStore } from "@/store/app";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { ref, reactive, computed, onBeforeMount } from "vue";
 import axios from "axios";
 
+const usersStore = useAppStore();
 const router = useRouter();
 const userStore = useStore();
 
@@ -92,6 +103,7 @@ const state = reactive({
   data: {},
   pageStartNum: 0,
   lastPageNum: 0,
+  searchKeyword: "",
 });
 const page = ref(1);
 
@@ -108,9 +120,8 @@ const pageHandler = () => {
   getArticles(page.value);
 };
 
-const btnView = (no) => {
-  localStorage.setItem("no", no);
-  router.push("/view");
+const btnView = (article) => {
+  router.push({ name: "View", params: article });
 };
 
 const getArticles = (pg) => {
@@ -130,6 +141,22 @@ const getArticles = (pg) => {
 onBeforeMount(() => {
   getArticles(1);
 });
+
+const searchArticles = () => {
+  const searchUrl = `http://localhost:8080/Voard/list?pg=${page.value}&keyword=${state.searchKeyword}`;
+  axios
+    .get(searchUrl)
+    .then((response) => {
+      console.log(response);
+      const data = response.data;
+      state.data = data;
+      state.pageStartNum = data.pageStartNum;
+      state.lastPageNum = data.lastPageNum;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 </script>
 <style scoped>
 .v-table {
