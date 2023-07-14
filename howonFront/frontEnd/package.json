@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^38.1.1",
+    "@ckeditor/ckeditor5-vue": "^5.1.0",
     "@mdi/font": "5.9.55",
     "add": "^2.0.6",
     "axios": "^1.4.0",
@@ -17,6 +19,7 @@
     "vue": "^3.3.4",
     "vue-router": "^4.2.4",
     "vuetify": "^3.3.7",
+    "vuetify-dialog": "^2.0.17",
     "vuex": "^4.1.0",
     "webfontloader": "^1.0.0"
   },

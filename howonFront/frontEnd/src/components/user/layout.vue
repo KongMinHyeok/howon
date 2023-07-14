@@ -1,5 +1,24 @@
 <template>
   <h4>Grids</h4>
+  <div class="text-center">
+    <v-dialog v-model="dialog" width="auto">
+      <template v-slot:activator="{ props }">
+        <v-btn color="primary" v-bind="props"> Open Dialog </v-btn>
+      </template>
+
+      <v-card>
+        <v-card-text>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="dialog = false"
+            >Close Dialog</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
   <v-container fluid>
     <v-row>
       <v-col cols="12" class="border text-center">12</v-col>
@@ -56,5 +75,9 @@
     </v-row>
   </v-container>
 </template>
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+
+const dialog = ref(false);
+</script>
 <style scoped></style>

@@ -52,16 +52,16 @@ public class ArticleService {
 		return result;	
 	}
 	
-	public int selectCountTotal() {
-		return dao.selectCountTotal();
+	public int selectCountTotal(String keyword) {
+		return dao.selectCountTotal(keyword);
 	}
 	
-	public ArticleEntity selectArticle(int no) {
+	public ArticleVO selectArticle(int no) {
 		
-		return articleRepo.findById(no).orElse(null);
+		return dao.selectArticle(no);
 	}
-	public List<ArticleVO> selectArticles(int start) {
-		return dao.selectArticles(start);
+	public List<ArticleVO> selectArticles(int start, String keyword) {
+		return dao.selectArticles(start, keyword);
 	}
 	public FileVO selectFile(int fno) {
 		return dao.selectFile(fno);
@@ -69,10 +69,10 @@ public class ArticleService {
 	public int updateFileDownload(int fno) {
 		return dao.updateFileDownload(fno);
 	}
-	public int updateArticle(ArticleVO vo) {
+	public Integer updateArticle(ArticleVO vo) {
 		return dao.updateArticle(vo);
 	}
-	public int deleteArticle(int no) {
+	public Integer deleteArticle(int no) {
 		return dao.deleteArticle(no);
 	}
 	

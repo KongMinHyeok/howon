@@ -20,6 +20,7 @@
                     label="아이디"
                   ></v-text-field>
                   <v-text-field
+                    type="password"
                     v-model="user.pass"
                     clearable
                     hide-details="auto"
@@ -27,9 +28,29 @@
                   ></v-text-field>
                 </v-col>
                 <v-col cols="4">
-                  <v-btn block height="90" color="primary" @click="btnLogin"
-                    >로그인</v-btn
-                  >
+                  <v-btn color="primary" @click="btnLogin" block height="90">
+                    로그인
+                  </v-btn>
+                  <v-dialog v-model="dialog1" width="auto">
+                    <v-card>
+                      <v-card-text> 로그인 성공 </v-card-text>
+                      <v-card-actions>
+                        <v-btn color="primary" @click="btntrue"
+                          >Close Dialog</v-btn
+                        >
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                  <v-dialog v-model="dialog2" width="auto">
+                    <v-card>
+                      <v-card-text> 로그인 실패 </v-card-text>
+                      <v-card-actions>
+                        <v-btn color="primary" @click="btnfalse"
+                          >Close Dialog</v-btn
+                        >
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
                 </v-col>
               </v-row>
             </v-container>
@@ -49,9 +70,22 @@ import { useRouter } from "vue-router";
 import axios from "axios";
 import { reactive } from "vue";
 import { useStore } from "vuex";
+import { ref } from "vue";
 
 const router = useRouter();
 const userStore = useStore();
+
+const dialog1 = ref(false);
+const dialog2 = ref(false);
+
+const btnfalse = () => {
+  dialog2.value = false;
+};
+
+const btntrue = () => {
+  dialog1.value = false;
+  router.push("/list");
+};
 
 const user = reactive({
   uid: null,
@@ -70,9 +104,11 @@ const btnLogin = () => {
       localStorage.setItem("accessToken", accessToken);
       userStore.dispatch("setUser", user);
 
-      router.push("/list");
+      dialog1.value = true;
+      //router.push("/list");
     })
     .catch((error) => {
+      dialog2.value = true;
       console.log(error);
     });
 };

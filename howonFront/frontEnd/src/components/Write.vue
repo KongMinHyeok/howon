@@ -8,7 +8,7 @@
       <v-container>
         <v-sheet max-width="100%" class="mx-auto">
           <v-row class="mt-4">
-            <v-col cols="1">제목</v-col>
+            <v-col cols="1" style="text-align: center">제목</v-col>
             <v-col cols="11"
               ><v-text-field
                 label="제목입력"
@@ -18,18 +18,18 @@
             ></v-col>
           </v-row>
           <v-row>
-            <v-col cols="1">내용</v-col>
+            <v-col cols="1" style="text-align: center">내용</v-col>
             <v-col cols="11">
-              <v-textarea
-                label="내용입력"
-                variant="outlined"
-                rows="12"
+              <ckeditor
+                :editor="editor"
                 v-model="article.content"
-              ></v-textarea>
+                :config="editorConfig"
+                style="height: 100%"
+              />
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="1">파일</v-col>
+            <v-col cols="1" style="text-align: center">파일</v-col>
             <v-col cols="11"
               ><v-file-input
                 show-size="100%"
@@ -72,6 +72,56 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import axios from "axios";
+import CKEditor from "@ckeditor/ckeditor5-vue";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+const ckeditor = CKEditor.component;
+// ✅ :editor
+const editor = ClassicEditor;
+// ✅ :config
+const editorConfig = ref({
+  // 설정 옵션
+  toolbar: [
+    "heading",
+    "|",
+    "fontBackgroundColor",
+    "fontColor",
+    "fontSize",
+    "bold",
+    "italic",
+    "|",
+    "alignment",
+    "bulletedList",
+    "numberedList",
+    "indent",
+    "outdent",
+    "|",
+    "imageUpload",
+    "insertTable",
+    "link",
+    "|",
+    "undo",
+    "redo",
+  ],
+  table: {
+    contentToolbar: [
+      "tableColumn",
+      "tableRow",
+      "mergeTableCells",
+      "tableProperties",
+      "tableCellProperties",
+    ],
+  },
+  image: {
+    resize: true,
+    toolbar: [
+      "imageStyle:alignLeft",
+      "imageStyle:alignRight",
+      "imageStyle:inline",
+      "imageStyle:side",
+    ],
+  },
+});
 
 const router = useRouter();
 const userStore = useStore();

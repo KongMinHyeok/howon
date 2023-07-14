@@ -19,15 +19,54 @@
 		join `board_user` as b
 		on a.uid = b.uid
 		where `parent`=0
+		<if test="keyword != ''">
+			and title like CONCAT('%', #{keyword}, '%')
+		</if>
 		order by `no` desc
 		limit #{start}, 10;		
 	</select>
 	
 	<select id="selectCountTotal" resultType="int">
-		select count(`no`) from `board_article` where `parent`=0;
+		select count(`no`) from `board_article` where `parent`=0
+		<if test="keyword != ''">
+			and title like CONCAT('%', #{keyword}, '%');
+		</if>
 	</select>
 	
+	<select id="updateArticle" parameterType="kr.co.voard.vo.ArticleVO">
+		update `board_article` set `title`=#{title}, `content`=#{content}, `rdate`=NOW()
+		where `no`=#{no};
+		
+	</select>
 	
+		<resultMap id="selectArticleResultMap" type="kr.co.voard.vo.ArticleVO">
+		<id column="no" property="no"/>
+		<result column="parent" property="parent"/>
+		<result column="comment" property="comment"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="file" property="file"/>
+		<!--
+			<result column="hit" property="hit"/> 
+			<result column="cate" property="cate"/>
+		-->
+		<result column="uid" property="uid"/>
+		<result column="regip" property="regip"/>
+		<result column="rdate" property="rdate"/>
+		<association property="fileVO" javaType="kr.co.voard.vo.FileVO">
+			<id column="fno" property="fno"/>
+			<result column="parent" property="parent"/>
+			<result column="newName" property="newName"/>
+			<result column="oriName" property="oriName"/>	
+			<result column="download" property="download"/>
+		</association>
+	</resultMap>
+	<select id="selectArticle" resultMap="selectArticleResultMap">
+		SELECT a.*, b.fno, b.oriName, b.download FROM `board_article` AS a 
+																	LEFT JOIN `board_file` AS b 
+																	ON a.`no`=b.parent 
+																	WHERE `no`=#{no};
+	</select>
 	<select id="deleteArticle">
 		delete from `board_article`
 		where `no`=#{no};

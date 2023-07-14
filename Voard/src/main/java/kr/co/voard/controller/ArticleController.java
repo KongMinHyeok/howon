@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.voard.repository.ArticleEntity;
@@ -28,24 +30,24 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 public class ArticleController {
 	
 	@Autowired
 	private ArticleService service;
 	
 	@GetMapping("list")
-	public Map<String, Object> list(String pg) {
+	public Map<String, Object> list(@RequestParam(value="pg", defaultValue = "1") String pg, @RequestParam(value="keyword", defaultValue = "") String keyword) {
 		
 		int currentPage = service.getCurrentPage(pg);
 		int start = service.getLimitStart(currentPage);
 		
-		int total = service.selectCountTotal();
+		int total = service.selectCountTotal(keyword);
 		int lastPageNum = service.getLastPageNum(total);
 		int pageStartNum = service.getPageStartNum(total, start);
 		int groups[] = service.getPageGroup(currentPage, lastPageNum);
 		
-		List<ArticleVO> articles =  service.selectArticles(start); 
+		List<ArticleVO> articles =  service.selectArticles(start, keyword); 
 		
 		//model.addAttribute("articles", articles); // 서버 사이드 렌더링을 위한 모델 참조
 		//model.addAttribute("currentPage", currentPage);
@@ -59,24 +61,26 @@ public class ArticleController {
 		resultMap.put("lastPageNum", lastPageNum);
 		resultMap.put("pageStartNum", pageStartNum);
 		resultMap.put("groups", groups);
+		resultMap.put("keyword", keyword);
 		
 		return resultMap;
 	}
 	
-	@GetMapping("modify")
-	public String modify(int no, Model model) {
+	@PutMapping("modify")
+	public Integer modify(@RequestBody ArticleVO vo) {
 		
-		ArticleEntity article = service.selectArticle(no);
-		model.addAttribute("article", article);
-
-		return "modify";
+		log.info("ArticleVO : " + vo);
+		
+		return service.updateArticle(vo);
 	}
 	
-	@GetMapping("view")
-	public ArticleEntity view(@PathVariable int no, Model model) {
-		
-		log.info("no" + no);
-		return service.selectArticle(no);
+	@GetMapping("getView")
+	public ArticleVO view(Model model, int no) {
+		// 게시물 들고오기
+		ArticleVO article = service.selectArticle(no);
+		model.addAttribute("article",article);
+		// 댓글 가져오기
+		return article;
 	}
 
 	
@@ -95,11 +99,6 @@ public class ArticleController {
 		return respEntity;
 	}
 	
-	@GetMapping("write")
-	public String write() {
-		return "write";
-	}
-	
 	@PostMapping("write")	
 	public int write(@RequestBody ArticleVO vo, HttpServletRequest req) {
 		String regip = req.getRemoteAddr();
@@ -111,8 +110,10 @@ public class ArticleController {
 		return result;
 	}
 	
+
 	@DeleteMapping("list/{no}")
 	public Integer deleteArticle(@PathVariable int no) {
+		log.info("no" + no);
 		return service.deleteArticle(no);
 	}
 

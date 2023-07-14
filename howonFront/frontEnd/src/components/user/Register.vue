@@ -93,8 +93,6 @@ const user = reactive({
 
 const rsChip1 = ref(false);
 const rsChip2 = ref(false);
-const rsChip3 = ref(false);
-const rsChip4 = ref(false);
 const loading = ref(false);
 
 const btnCheckUid = () => {

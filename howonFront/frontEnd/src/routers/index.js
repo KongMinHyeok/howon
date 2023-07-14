@@ -17,13 +17,13 @@ const router = createRouter({
     { path: "/user/search", name: "search", component: search },
     { path: "/List", name: "List", component: List },
     {
-      path: "/View/:no/:title/:content/:rdate",
+      path: "/View/:no/:title/:content/:rdate/:uid",
       name: "View",
       component: View,
       props: true,
     },
     {
-      path: "/Modify/:no/:title/:content/:rdate",
+      path: "/Modify/:no/:title/:content/:rdate/:uid",
       name: "Modify",
       component: Modify,
       props: true,

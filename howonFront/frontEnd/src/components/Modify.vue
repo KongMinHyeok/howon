@@ -24,12 +24,12 @@
                   density="compact"
                   v-model="article.title"
                 ></v-text-field>
-                <v-textarea
-                  label="글내용 입력"
-                  variant="outlined"
-                  rows="10"
+                <ckeditor
+                  :editor="editor"
                   v-model="article.content"
-                ></v-textarea>
+                  :config="editorConfig"
+                  style="height: 100%"
+                />
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -41,14 +41,64 @@
         </v-sheet>
       </v-container>
     </v-main>
-    <v-footer app theme="dark"> copyright &copy;Voard2 v1.0 </v-footer>
   </v-app>
 </template>
 <script setup>
 import axios from "axios";
-import { reactive, computed } from "vue";
+import { reactive, computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import CKEditor from "@ckeditor/ckeditor5-vue";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+const ckeditor = CKEditor.component;
+// ✅ :editor
+const editor = ClassicEditor;
+// ✅ :config
+const editorConfig = ref({
+  // 설정 옵션
+  toolbar: [
+    "heading",
+    "|",
+    "fontBackgroundColor",
+    "fontColor",
+    "fontSize",
+    "bold",
+    "italic",
+    "|",
+    "alignment",
+    "bulletedList",
+    "numberedList",
+    "indent",
+    "outdent",
+    "|",
+    "imageUpload",
+    "insertTable",
+    "link",
+    "|",
+    "undo",
+    "redo",
+  ],
+  table: {
+    contentToolbar: [
+      "tableColumn",
+      "tableRow",
+      "mergeTableCells",
+      "tableProperties",
+      "tableCellProperties",
+    ],
+  },
+  image: {
+    resize: true,
+    toolbar: [
+      "imageStyle:alignLeft",
+      "imageStyle:alignRight",
+      "imageStyle:inline",
+      "imageStyle:side",
+    ],
+  },
+});
+
 const userStore = useStore();
 const router = useRouter();
 const user = computed(() => userStore.getters.user);
@@ -84,6 +134,7 @@ const btnModify = () => {
     .catch((error) => {
       console.log(error);
     });
+  alert("수정이 완료되었습니다.");
   router.push({ name: "View", params: article });
 };
 </script>
