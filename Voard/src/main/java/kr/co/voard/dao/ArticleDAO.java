@@ -14,12 +14,12 @@ import kr.co.voard.vo.FileVO;
 @Repository
 public interface ArticleDAO {
 
-	public int insertArticle(ArticleVO vo);
+	public int insertArticle(ArticleVO article);	
 	public int insertFile(FileVO vo);
 	public int selectCountTotal(@Param(value="keyword")String keyword );
-	public ArticleVO selectArticle(int no);
+	public List<ArticleVO> selectArticle(String parent);
 	public List<ArticleVO> selectArticles(int start, @Param(value="keyword")String keyword);
-	public FileVO selectFile(int fno);
+	public FileVO selectFile(int parent);
 	public int updateFileDownload(int fno);
 	public Integer updateArticle(ArticleVO vo);
 	public Integer deleteArticle(int no);

@@ -32,23 +32,23 @@
             <v-col cols="1" style="text-align: center">파일</v-col>
             <v-col cols="11"
               ><v-file-input
+                name="file"
+                @input="changeFile"
                 show-size="100%"
                 label="파일을 드래그하여 업로드 가능"
                 variant="outlined"
-                v-model="article.file"
-              ></v-file-input
-            ></v-col>
+                v-model="article.fname"
+                id="file"
+                multiple
+              ></v-file-input>
+            </v-col>
           </v-row>
           <v-row>
             <v-col cols="1"></v-col>
-            <v-col cols="11"
-              ><v-btn @click="btnfile" style="top: -30px"
-                >파일 선택</v-btn
-              ></v-col
-            >
+            <v-col cols="11"></v-col>
           </v-row>
           <v-sheet style="text-align: center">
-            <v-btn color="blue" @click="btnWrite" class="ml-2">저장</v-btn>
+            <v-btn color="blue" @click="btnWrite()" class="ml-2">저장</v-btn>
             <v-btn color="black" @click="btnCancel">취소</v-btn>
           </v-sheet>
         </v-sheet>
@@ -127,9 +127,9 @@ const router = useRouter();
 const userStore = useStore();
 
 const article = reactive({
+  uid: null,
   title: null,
   content: null,
-  file: null,
 });
 
 const dialog = ref(false);
@@ -142,16 +142,47 @@ const btnCloseDlg = () => {
 const btnCancel = () => {
   router.push("/list");
 };
+
+const changeFile = (e) => {
+  article.fname = Array.from(e.target.files);
+
+  console.log(article.fileCount);
+
+  const article = reactive({
+    uid: null,
+    title: null,
+    content: null,
+    fname: String,
+    file: [],
+    fileCount: 0,
+  });
+};
+
 const btnWrite = () => {
   const user = userStore.getters.user;
   article.uid = user.uid;
 
+  const formData = new FormData();
+  formData.append("uid", article.uid);
+  formData.append("title", article.title);
+  formData.append("content", article.content);
+
+  if (article.fname && article.fname.length > 0) {
+    for (let i = 0; i < article.fname.length; i++) {
+      formData.append("fname", article.fname[i]);
+    }
+  }
   axios
-    .post("http://localhost:8080/Voard/write", article)
+    .post("http://localhost:8080/Voard/write", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
     .then((response) => {
-      console.log(response);
+      console.log(article);
       if (response.data > 0) {
         dialog.value = true;
+        console.log(article.file);
         //router.push("/list");
       }
     })

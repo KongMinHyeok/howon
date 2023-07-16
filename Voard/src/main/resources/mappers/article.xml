@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.voard.dao.ArticleDAO">
 	
-	<insert id="insertArticle">
+	<insert id="insertArticle" keyProperty="no" parameterType="kr.co.voard.vo.ArticleVO" useGeneratedKeys="true">
 		insert into `board_article` set
 			`title`=#{title},
 			`content`=#{content},
@@ -12,6 +12,13 @@
 			`file`=#{file},
 			`regip`=#{regip},
 			`rdate`= NOW();	
+	</insert>
+	<insert id="insertFile">
+		insert into `board_file` set
+			`parent`=#{parent},
+			`newName`=#{newName},
+			`oriName`=#{oriName},
+			`rdate`= NOW();
 	</insert>
 	
 	<select id="selectArticles" resultType="kr.co.voard.vo.ArticleVO">
@@ -39,37 +46,33 @@
 		
 	</select>
 	
-		<resultMap id="selectArticleResultMap" type="kr.co.voard.vo.ArticleVO">
+	<select id="deleteArticle">
+		delete from `board_article`
+		where `no`=#{no};
+	</select>
+	
+	<resultMap id="selectArticleResultMap" type="kr.co.voard.vo.ArticleVO">
 		<id column="no" property="no"/>
 		<result column="parent" property="parent"/>
 		<result column="comment" property="comment"/>
 		<result column="title" property="title"/>
 		<result column="content" property="content"/>
 		<result column="file" property="file"/>
-		<!--
-			<result column="hit" property="hit"/> 
-			<result column="cate" property="cate"/>
-		-->
 		<result column="uid" property="uid"/>
 		<result column="regip" property="regip"/>
 		<result column="rdate" property="rdate"/>
-		<association property="fileVO" javaType="kr.co.voard.vo.FileVO">
-			<id column="fno" property="fno"/>
-			<result column="parent" property="parent"/>
-			<result column="newName" property="newName"/>
-			<result column="oriName" property="oriName"/>	
-			<result column="download" property="download"/>
-		</association>
+		<collection column="no" property="fileList" ofType="kr.co.voard.vo.FileVO" select="selectFile" javaType="List"/>
 	</resultMap>
+	
 	<select id="selectArticle" resultMap="selectArticleResultMap">
-		SELECT a.*, b.fno, b.oriName, b.download FROM `board_article` AS a 
-																	LEFT JOIN `board_file` AS b 
-																	ON a.`no`=b.parent 
-																	WHERE `no`=#{no};
-	</select>
-	<select id="deleteArticle">
-		delete from `board_article`
-		where `no`=#{no};
+		select * from `board_article` WHERE `no`=#{parent};
 	</select>
 	
+	<select id="selectFile" resultType="kr.co.voard.vo.FileVO">
+		select * from `board_file` where `parent`=#{parent};
+	</select>
+	
+	<select id="selectFileDownload" resultType="kr.co.voard.vo.FileVO">
+		select * from `board_file` where `parent`=#{parent} offset {num};
+	</select>
 </mapper>

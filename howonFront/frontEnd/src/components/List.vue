@@ -47,7 +47,6 @@
                 <th width="1200" class="text-center">제목</th>
                 <th class="text-center">작성자</th>
                 <th class="text-center">등록일</th>
-                <th>관리</th>
               </tr>
             </thead>
             <tbody>
@@ -62,9 +61,6 @@
                 <td class="text-center">{{ article.uid }}</td>
                 <td class="text-center">
                   {{ article.rdate }}
-                </td>
-                <td class="text-center">
-                  <v-btn @click="btnDelete(article.no)">삭제</v-btn>
                 </td>
               </tr>
             </tbody>
@@ -124,19 +120,7 @@ const pageHandler = () => {
 
 const btnView = (article, user) => {
   router.push({ name: "View", params: article, user });
-};
-
-const btnDelete = (article) => {
-  axios
-    .delete("http://localhost:8080/Voard/list/" + article)
-    .then((response) => {
-      console.log(response);
-      location.reload();
-    })
-    .catch((error) => {
-      console.log(error);
-      router.push("list");
-    });
+  console.log(article);
 };
 
 const getArticles = (pg) => {

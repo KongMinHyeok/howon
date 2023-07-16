@@ -38,8 +38,11 @@
             v-html="article.content"
           ></p>
         </v-row>
-        <v-row class="file">
+        <v-row>
           <h2>첨부파일</h2>
+          <v-col v-if="files.fileList.length > 0">
+            <p v-for="file in files.fileList">{{ file.oriName }}</p>
+          </v-col>
         </v-row>
         <v-row class="btn">
           <v-col>
@@ -120,7 +123,7 @@ const btnModify = (article) => {
 
 const btnDelete = (article) => {
   axios
-    .delete("http://localhost:8080/Voard/view" + article)
+    .delete("http://localhost:8080/Voard/view?no=" + article.no)
     .then((res) => {
       console.log(res);
       console.log("delete no:" + article.no);
@@ -141,14 +144,30 @@ const article = reactive({
   rdate: props.rdate,
 });
 
+const file = reactive({
+  fno: 0,
+  parent: 0,
+  newName: "",
+  oriName: "",
+  download: 0,
+  rdate: "",
+});
+
+const files = ref([]);
+
 onBeforeMount(() => {
-  console.log(usersStore.getArticle);
-  if (usersStore.getArticle == null) {
-    const no = localStorage.getItem("no");
-    const loadArticle = usersStore.setArticle(no);
-    article.title = loadArticle.title;
-    article.content = loadArticle.content;
-  }
+  axios
+    .get("http://localhost:8080/Voard/view?no=" + article.no)
+    .then((response) => {
+      const responseData = response.data;
+      article.value = responseData;
+      files.value = responseData;
+      console.log(files.value);
+      console.log(article);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
 </script>
 <style scoped>
