@@ -22,12 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.voard.dao.ArticleDAO;
+import kr.co.voard.domain.ArticleVO;
+import kr.co.voard.domain.FileVO;
 import kr.co.voard.exceptions.CustomErrorCode;
 import kr.co.voard.exceptions.CustomException;
 import kr.co.voard.repository.ArticleEntity;
 import kr.co.voard.repository.ArticleRepo;
-import kr.co.voard.vo.ArticleVO;
-import kr.co.voard.vo.FileVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -52,23 +52,23 @@ public class ArticleService {
 		return dao.selectCountTotal(keyword);
 	}
 	
-	public List<ArticleVO> selectArticle(String parent) {
-		return dao.selectArticle(parent);
+	public ArticleVO selectArticle(String no) {
+		return dao.selectArticle(no);
 	}
 	public List<ArticleVO> selectArticles(int start, String keyword) {
 		return dao.selectArticles(start, keyword);
 	}
-	public FileVO selectFile(int parent) {
-		return dao.selectFile(parent);
-	}
-	public int updateFileDownload(int fno) {
-		return dao.updateFileDownload(fno);
+	public FileVO selectFile(String fno) {
+		return dao.selectFile(fno);
 	}
 	public Integer updateArticle(ArticleVO vo) {
 		return dao.updateArticle(vo);
 	}
 	public Integer deleteArticle(int no) {
 		return dao.deleteArticle(no);
+	}
+	public Integer deleteFile(String parent) {
+		return dao.deleteFile(parent);
 	}
 	
 	// 파일 업로드
@@ -126,10 +126,7 @@ public class ArticleService {
 		
 		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
-	
-	
-
-	
+		
 	
 	// 현재 페이지 번호
 	public int getCurrentPage(String pg) {

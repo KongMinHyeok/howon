@@ -1,4 +1,4 @@
-package kr.co.voard.vo;
+package kr.co.voard.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

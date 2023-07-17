@@ -1,6 +1,15 @@
 package kr.co.voard.jwt;
 
 import java.util.Date;
+/** 
+ * 
+ * X-AUTH-TOKEN : 사용자 인증을 위해 사용되는 헤더이름중 하나 (인증- 유효한 토큰인지 확인)
+ * X-ACCESS-TOKEN : 사용자의 권한을 위해 사용되는 헤더 이름중 하나 (권한 - 엑세스 권한 제어)
+ * 
+ * JWT란 ? - JSON WEB TOKEN 유저를 인증하고 식별하기위한 토큰 기반 인증
+ * 
+ * 
+ * */
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -16,18 +25,19 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
-@Component
+@Component 
 public class JWTUtil {
 
 	private final long TOKEN_VALIDATE_DAY = 1000 * 60 * 60 * 1; // 1시간
 	private SecretKey secretKey;
 	
-	public JWTUtil(@Value("${jwt.secret}") String secret) {
-		this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+	// JWT의 프로퍼티값 설정
+	public JWTUtil(@Value("${jwt.secret}") String secret) { 
+		this.secretKey = Keys.hmacShaKeyFor(secret.getBytes()); // secret주입
 	}
 	
 	// JWT에서 클레임값 추출
-	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) { 
 		
 		Claims claims = Jwts.parserBuilder()
 							.setSigningKey(secretKey)
@@ -52,7 +62,7 @@ public class JWTUtil {
 	
 	// HTTP 헤더에서 Token 추출
 	public String resolveToken(HttpServletRequest request) {
-		return request.getHeader("X-AUTH-TOKEN");
+		return request.getHeader("X-AUTH-TOKEN"); // x-auth-token 헤더에서 토큰값을 가져옴
 	}
 	
 	// JWT 생성

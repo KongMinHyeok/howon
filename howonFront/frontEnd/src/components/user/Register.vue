@@ -91,8 +91,8 @@ const user = reactive({
   pass2: null,
 });
 
-const rsChip1 = ref(false);
-const rsChip2 = ref(false);
+const rsChip1 = ref(false); // 사용중
+const rsChip2 = ref(false); // 사용가능
 const loading = ref(false);
 
 const btnCheckUid = () => {
@@ -131,6 +131,7 @@ const btnRegister = () => {
     .post("http://localhost:8080/Voard/user/register", user)
     .then((response) => {
       console.log(response);
+      alert("가입이 완료 되었습니다.");
       router.push("/user/login");
     })
     .catch((error) => {

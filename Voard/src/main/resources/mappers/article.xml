@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.voard.dao.ArticleDAO">
 	
-	<insert id="insertArticle" keyProperty="no" parameterType="kr.co.voard.vo.ArticleVO" useGeneratedKeys="true">
+	<insert id="insertArticle" keyProperty="no" parameterType="kr.co.voard.domain.ArticleVO" useGeneratedKeys="true">
 		insert into `board_article` set
 			`title`=#{title},
 			`content`=#{content},
@@ -21,7 +21,7 @@
 			`rdate`= NOW();
 	</insert>
 	
-	<select id="selectArticles" resultType="kr.co.voard.vo.ArticleVO">
+	<select id="selectArticles" resultType="kr.co.voard.domain.ArticleVO">
 		select a.*, b.`nick` from `board_article` as a
 		join `board_user` as b
 		on a.uid = b.uid
@@ -40,7 +40,7 @@
 		</if>
 	</select>
 	
-	<select id="updateArticle" parameterType="kr.co.voard.vo.ArticleVO">
+	<select id="updateArticle" parameterType="kr.co.voard.domain.ArticleVO">
 		update `board_article` set `title`=#{title}, `content`=#{content}, `rdate`=NOW()
 		where `no`=#{no};
 		
@@ -50,8 +50,11 @@
 		delete from `board_article`
 		where `no`=#{no};
 	</select>
+	<select id="deleteFile">
+		delete from `board_file` where `parent`=#{parent};
+	</select>
 	
-	<resultMap id="selectArticleResultMap" type="kr.co.voard.vo.ArticleVO">
+	<resultMap id="selectArticleResultMap" type="kr.co.voard.domain.ArticleVO">
 		<id column="no" property="no"/>
 		<result column="parent" property="parent"/>
 		<result column="comment" property="comment"/>
@@ -61,18 +64,18 @@
 		<result column="uid" property="uid"/>
 		<result column="regip" property="regip"/>
 		<result column="rdate" property="rdate"/>
-		<collection column="no" property="fileList" ofType="kr.co.voard.vo.FileVO" select="selectFile" javaType="List"/>
+		<collection column="no" property="fileList" ofType="kr.co.voard.domain.FileVO" select="selectFile" javaType="List"/>
 	</resultMap>
 	
 	<select id="selectArticle" resultMap="selectArticleResultMap">
 		select * from `board_article` WHERE `no`=#{parent};
 	</select>
 	
-	<select id="selectFile" resultType="kr.co.voard.vo.FileVO">
+	<select id="selectFile" resultType="kr.co.voard.domain.FileVO">
 		select * from `board_file` where `parent`=#{parent};
 	</select>
 	
-	<select id="selectFileDownload" resultType="kr.co.voard.vo.FileVO">
+	<select id="selectFileDownload" resultType="kr.co.voard.domain.FileVO">
 		select * from `board_file` where `parent`=#{parent} offset {num};
 	</select>
 </mapper>

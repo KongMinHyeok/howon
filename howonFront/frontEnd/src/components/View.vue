@@ -40,9 +40,17 @@
         </v-row>
         <v-row>
           <h2>첨부파일</h2>
-          <v-col v-if="files.fileList.length > 0">
-            <p v-for="file in files.fileList">{{ file.oriName }}</p>
-          </v-col>
+          <template v-if="isFilesLoading">
+            <p>Loading...</p>
+          </template>
+          <template v-else-if="files.fileList.length > 0">
+            <template v-for="file in files.fileList" :key="file.fno">
+              <v-btn @click="btnDownload">{{ file.oriName }}</v-btn>
+            </template>
+          </template>
+          <template v-else>
+            <p>파일이 없습니다.</p>
+          </template>
         </v-row>
         <v-row class="btn">
           <v-col>
@@ -113,6 +121,18 @@ const props = defineProps({
   rdate: String,
 });
 
+const btnDownload = () => {
+  axios
+    .get("http://localhost:8080/Voard/download?fno=" + file.fno)
+    .then((response) => {
+      console.log(file.newName);
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 const btnList = () => {
   router.push("/list");
 };
@@ -135,6 +155,8 @@ const btnDelete = (article) => {
     });
 };
 
+const isFilesLoading = ref(true);
+
 const article = reactive({
   no: props.no,
   title: props.title,
@@ -149,25 +171,27 @@ const file = reactive({
   parent: 0,
   newName: "",
   oriName: "",
-  download: 0,
+  download: "",
   rdate: "",
 });
 
 const files = ref([]);
 
-onBeforeMount(() => {
-  axios
-    .get("http://localhost:8080/Voard/view?no=" + article.no)
-    .then((response) => {
-      const responseData = response.data;
-      article.value = responseData;
-      files.value = responseData;
-      console.log(files.value);
-      console.log(article);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+onBeforeMount(async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:8080/Voard/view?no=" + article.no
+    );
+    const responseData = response.data;
+    article.value = responseData;
+    files.value = responseData;
+    console.log(files.value);
+    console.log(article.value);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isFilesLoading.value = false;
+  }
 });
 </script>
 <style scoped>

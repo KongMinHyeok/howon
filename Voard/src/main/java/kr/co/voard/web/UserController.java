@@ -1,4 +1,4 @@
-package kr.co.voard.controller;
+package kr.co.voard.web;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,13 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.voard.domain.UserVO;
 import kr.co.voard.jwt.JWTUtil;
 import kr.co.voard.repository.UserEntity;
 import kr.co.voard.security.MyUserDetails;
 import kr.co.voard.security.SecurityUserService;
 import kr.co.voard.service.UserService;
-import kr.co.voard.vo.TermsVO;
-import kr.co.voard.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.asm.Advice.Origin;
 
@@ -44,12 +43,6 @@ public class UserController {
 	
 	@Autowired
 	private UserService service;
-	
-	
-	@GetMapping("/user/terms")
-	public TermsVO terms() {		
-		return service.selectTerms();
-	}
 	
 	@PostMapping("/user/register")
 	public void register(@RequestBody UserVO vo) {

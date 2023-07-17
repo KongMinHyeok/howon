@@ -45,7 +45,7 @@
 </template>
 <script setup>
 import axios from "axios";
-import { reactive, computed, ref } from "vue";
+import { reactive, computed, ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import CKEditor from "@ckeditor/ckeditor5-vue";
@@ -128,6 +128,7 @@ const btnCancel = () => {
 const btnModify = () => {
   axios
     .put("http://localhost:8080/Voard/modify", article)
+    //.put("http://localhost:8080/Voard/modify?no=", article.no)
     .then((response) => {
       console.log(response.data);
     })
@@ -137,5 +138,17 @@ const btnModify = () => {
   alert("수정이 완료되었습니다.");
   router.push({ name: "View", params: article });
 };
+/*
+onBeforeMount(() => {
+  axios
+    .get("http://localhost:8080/Voard/modify", article)
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+*/
 </script>
 <style scoped></style>

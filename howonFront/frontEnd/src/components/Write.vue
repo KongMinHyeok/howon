@@ -21,10 +21,10 @@
             <v-col cols="1" style="text-align: center">내용</v-col>
             <v-col cols="11">
               <ckeditor
+                name="testEditor"
                 :editor="editor"
                 v-model="article.content"
                 :config="editorConfig"
-                style="height: 100%"
               />
             </v-col>
           </v-row>
@@ -63,6 +63,28 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog v-model="dialogtitle" width="auto">
+          <v-card>
+            <v-toolbar color="primary" title="글 등록 확인"></v-toolbar>
+            <v-card-text>제목을 작성해주세요!</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="btnCloseDlg2">확인</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogcontent" width="auto">
+          <v-card>
+            <v-toolbar color="primary" title="글 등록 확인"></v-toolbar>
+            <v-card-text>내용을 작성해주세요!</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="btnCloseDlg2">확인</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-container>
     </v-main>
   </v-app>
@@ -80,6 +102,7 @@ const ckeditor = CKEditor.component;
 const editor = ClassicEditor;
 // ✅ :config
 const editorConfig = ref({
+  height: "500px",
   // 설정 옵션
   toolbar: [
     "heading",
@@ -133,10 +156,18 @@ const article = reactive({
 });
 
 const dialog = ref(false);
+const dialogtitle = ref(false);
+const dialogcontent = ref(false);
 
 const btnCloseDlg = () => {
   dialog.value = false;
   router.push("/list");
+};
+
+const btnCloseDlg2 = () => {
+  dialogtitle.value = false;
+  dialogcontent.value = false;
+  router.push(false);
 };
 
 const btnCancel = () => {
@@ -144,10 +175,6 @@ const btnCancel = () => {
 };
 
 const changeFile = (e) => {
-  article.fname = Array.from(e.target.files);
-
-  console.log(article.fileCount);
-
   const article = reactive({
     uid: null,
     title: null,
@@ -156,11 +183,22 @@ const changeFile = (e) => {
     file: [],
     fileCount: 0,
   });
+  article.fname = Array.from(e.target.files);
+  console.log(article.fileCount);
 };
 
 const btnWrite = () => {
   const user = userStore.getters.user;
   article.uid = user.uid;
+
+  if (!article.title) {
+    dialogtitle.value = true;
+    return false;
+  }
+  if (!article.content) {
+    dialogcontent.value = true;
+    return false;
+  }
 
   const formData = new FormData();
   formData.append("uid", article.uid);
@@ -180,11 +218,7 @@ const btnWrite = () => {
     })
     .then((response) => {
       console.log(article);
-      if (response.data > 0) {
-        dialog.value = true;
-        console.log(article.file);
-        //router.push("/list");
-      }
+      dialog.value = true;
     })
     .catch((error) => {
       console.log(error);

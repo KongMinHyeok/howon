@@ -137,6 +137,7 @@ const getArticles = (pg) => {
       console.log(error);
     });
 };
+
 onBeforeMount(() => {
   getArticles(1);
 });
